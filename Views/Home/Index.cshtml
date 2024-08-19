@@ -1,8 +1,26 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<h2>Sample Data</h2>
+<h2>Gerard</h2>
+<ul id="sampleData">
+    <!-- New data will be appended here solo -->
+</ul>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7289/sampleHub") // URL of your SignalR hub
+        .build();
+
+    connection.on("ReceiveMessage", function (message) {
+        console.log("Received message:", message); // Add logging for debugging
+        $("#sampleData").append(`<li>${message.name} - ${message.createdAt}</li>`);
+    });
+
+    connection.start().then(function () {
+        console.log("SignalR Connected.");
+    }).catch(function (err) {
+        console.error("SignalR connection error:", err.toString());
+    });
+</script>
